@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 import aiosqlite
 from .config import settings
 
@@ -10,7 +11,9 @@ CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT NOT NULL);
 """
 
 async def connect():
-    database = await aiosqlite.connect(settings.database_path)
+    database_path = Path(settings.database_path).expanduser()
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    database = await aiosqlite.connect(str(database_path))
     database.row_factory = aiosqlite.Row
     await database.execute("PRAGMA foreign_keys=ON")
     return database
