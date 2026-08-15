@@ -1,2 +1,42 @@
-# tiho-booking-bot-demo
-Telegram booking bot with owner Mini App, FastAPI, aiogram and SQLite
+# Тихо: Telegram booking bot demo
+
+Готовое продаваемое демо автоматической записи для салона, клиники или частного специалиста.
+
+## Что умеет
+
+- запись через Telegram: услуга → мастер → дата → свободный слот → контакты → подтверждение;
+- защита от двойной записи на уровне SQLite;
+- просмотр и отмена своих записей;
+- автоматическое напоминание за 24 часа;
+- передача диалога администратору;
+- Mini App владельца: показатели, записи, включение услуг, настройки;
+- demo mode: Mini App работает даже без Telegram-токена.
+
+## Быстрый запуск
+
+```bash
+cp .env.example .env
+# добавьте BOT_TOKEN от @BotFather
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+Откройте `http://localhost:8000`. Для кнопки Mini App укажите публичный HTTPS URL в `WEBAPP_URL`. Локально удобно использовать Cloudflare Tunnel или ngrok.
+
+## Docker
+
+```bash
+docker build -t tiho-demo .
+docker run --env-file .env -p 8000:8000 tiho-demo
+```
+
+## Демо покупателю
+
+1. Покажите клиентскую запись в Telegram.
+2. Откройте Mini App и покажите, что новая запись появилась сразу.
+3. Отключите услугу в кабинете, она исчезнет из клиентского flow.
+4. Отмените запись из Telegram, слот снова станет доступен.
+
+## Перед продакшеном
+
+Замените SQLite на PostgreSQL, polling на webhook, добавьте проверку Telegram `initData`, платёжный провайдер и реальную CRM. В демо эти интеграции намеренно вынесены за интерфейсы, чтобы быстро адаптировать решение под покупателя.
